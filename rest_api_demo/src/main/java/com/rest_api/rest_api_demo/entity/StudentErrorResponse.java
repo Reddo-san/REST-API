@@ -1,3 +1,4 @@
+/*
 package com.rest_api.rest_api_demo.entity;
 
 public class StudentErrorResponse {
@@ -39,3 +40,5 @@ public class StudentErrorResponse {
   }
 
 }
+
+*/

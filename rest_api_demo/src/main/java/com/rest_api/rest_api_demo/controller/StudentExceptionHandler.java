@@ -1,3 +1,4 @@
+/*
 package com.rest_api.rest_api_demo.controller;
 
 import org.springframework.http.HttpStatus;
@@ -35,3 +36,4 @@ public class StudentExceptionHandler {
   }
 
 }
+*/

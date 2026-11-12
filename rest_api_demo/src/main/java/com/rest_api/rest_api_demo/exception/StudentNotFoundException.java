@@ -1,3 +1,4 @@
+/*
 package com.rest_api.rest_api_demo.exception;
 
 public class StudentNotFoundException extends RuntimeException{
@@ -17,3 +18,4 @@ public class StudentNotFoundException extends RuntimeException{
   }
 
 }
+*/

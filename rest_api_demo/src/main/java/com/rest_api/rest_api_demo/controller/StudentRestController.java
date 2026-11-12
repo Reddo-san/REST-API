@@ -1,46 +1,37 @@
 package com.rest_api.rest_api_demo.controller;
 
-import com.rest_api.rest_api_demo.entity.Student;
-import com.rest_api.rest_api_demo.exception.StudentNotFoundException;
+import com.rest_api.rest_api_demo.dto.StudentDto;
+import com.rest_api.rest_api_demo.service.StudentService;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.List;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.annotation.PostConstruct;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController 
-@RequestMapping ("/api")
+@RequestMapping ("/api/students")
 public class StudentRestController {
 
-  private List<Student> theStudents;
+  private StudentService studentService;
 
-  @PostConstruct 
-  public void initialize(){
-    theStudents = new ArrayList<>();
-
-    theStudents.add(new Student("Douzo", "Yoroshiku"));
-    theStudents.add(new Student("Arigatou", "Gozaimashita"));
-    theStudents.add(new Student("Ohayou", "Gozaimasu"));
-
+  public StudentRestController(StudentService studentService){
+    this.studentService = studentService;
   }
 
-  @GetMapping("/students")
-  public List<Student> getStudents() {
-      return theStudents;
+  @PostMapping
+  public ResponseEntity<StudentDto> createStudents(@RequestBody StudentDto theStudentDto) {
+      StudentDto saved = studentService.createStudent(theStudentDto);
+      return new ResponseEntity<>(saved, HttpStatus.CREATED);
   }
-
-  @GetMapping("/students/{studentId}")
-  public Student getStudent(@PathVariable  int studentId) {
-    if (studentId >= theStudents.size() || (studentId < 0)){
-      throw new StudentNotFoundException(
-                "Student id " + studentId + " not found!");
-    }
-      return theStudents.get(studentId);
-  }
-  
   
 
 }
