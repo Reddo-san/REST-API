@@ -1,16 +1,19 @@
 package com.rest_api.rest_api_demo.service;
 
 
-import org.springframework.http.ResponseEntity;
+//import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.PathVariable;
 
 import com.rest_api.rest_api_demo.dto.StudentDto;
 import com.rest_api.rest_api_demo.entity.Student;
 import com.rest_api.rest_api_demo.mapper.StudentMapper;
 import com.rest_api.rest_api_demo.repository.StudentRepository;
 import com.rest_api.rest_api_demo.exception.StudentNotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service 
 public class StudentServiceImplement implements StudentService{
@@ -32,12 +35,59 @@ public class StudentServiceImplement implements StudentService{
   @Override 
   public StudentDto getStudentById(Long theId){
     Student student = studentRepo.findById(theId).orElseThrow(()->
-              new StudentNotFoundException("Student id" + theId + " not found!")
+              new StudentNotFoundException("Student id " + theId + " not found!")
               );
     return StudentMapper.mapToStudentDto(student);
-
-
   }
-  
 
+  @Override 
+  public List<StudentDto> getAllStudents(){
+    List<Student> students = studentRepo.findAll();
+    return students.stream().map((student)->StudentMapper.mapToStudentDto(student))
+                    .collect(Collectors.toList());
+  }
+
+  @Override
+    public StudentDto updateStudent(Long theId, StudentDto theStudentDto) {
+        Student student = studentRepo.findById(theId)
+                .orElseThrow(() -> new StudentNotFoundException(
+                        "Student id " + theId + " not found!"));
+
+        student.setFirstName(theStudentDto.getFirstName());
+        student.setLastName(theStudentDto.getLastName());
+        student.setEmail(theStudentDto.getEmail());
+
+        Student saved = studentRepo.save(student);
+        return StudentMapper.mapToStudentDto(saved);
+    }
+
+    @Override
+    public StudentDto patchStudent(Long theId, StudentDto theStudentDto) {
+        Student student = studentRepo.findById(theId)
+                .orElseThrow(() -> new StudentNotFoundException(
+                        "Student id " + theId + " not found!"));
+
+        if (theStudentDto.getFirstName() != null) {
+            student.setFirstName(theStudentDto.getFirstName());
+        }
+        if (theStudentDto.getLastName() != null) {
+            student.setLastName(theStudentDto.getLastName());
+        }
+        if (theStudentDto.getEmail() != null) {
+            student.setEmail(theStudentDto.getEmail());
+        }
+
+        Student saved = studentRepo.save(student);
+        return StudentMapper.mapToStudentDto(saved);
+    }
+
+    @Override
+    public void deleteStudentById(Long theId) {
+        studentRepo.findById(theId)
+                .orElseThrow(() -> new StudentNotFoundException(
+                        "Student id " + theId + " not found!"));
+
+        studentRepo.deleteById(theId);
+    }
 }
+  
